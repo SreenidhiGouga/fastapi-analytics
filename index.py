@@ -5,41 +5,43 @@ import json
 
 app = FastAPI()
 
-# Enable CORS for all origins
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_methods=["POST"],
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.post("/analytics")
-async def analytics(request: Request):
+@app.post("/api/latency")   # 👈 this is the route you want
+async def latency(request: Request):
     data = await request.json()
     regions = data.get("regions", [])
-    threshold = data.get("threshold_ms", 0)
+    threshold = data.get("threshold_ms", 180)
 
-    # Load telemetry file (place in repo root as telemetry.json)
     with open("telemetry.json", "r") as f:
         telemetry = json.load(f)
 
-    result = {}
+    results = {}
     for region in regions:
-        if region not in telemetry:
+        region_data = telemetry.get(region, [])
+        if not region_data:
             continue
-        latencies = np.array([rec["latency_ms"] for rec in telemetry[region]])
-        uptimes = np.array([rec["uptime"] for rec in telemetry[region]])
 
-        breaches = int(np.sum(latencies > threshold))
+        latencies = [rec["latency_ms"] for rec in region_data]
+        uptimes = [rec["uptime"] for rec in region_data]
+
         avg_latency = float(np.mean(latencies))
         p95_latency = float(np.percentile(latencies, 95))
         avg_uptime = float(np.mean(uptimes))
+        breaches = int(np.sum(np.array(latencies) > threshold))
 
-        result[region] = {
-            "avg_latency": round(avg_latency, 2),
-            "p95_latency": round(p95_latency, 2),
-            "avg_uptime": round(avg_uptime, 3),
-            "breaches": breaches,
+        results[region] = {
+            "avg_latency": avg_latency,
+            "p95_latency": p95_latency,
+            "avg_uptime": avg_uptime,
+            "breaches": breaches
         }
 
-    return result
+    return results
