@@ -1,0 +1,18 @@
+name: 21f3001224@ds.study.iitm.ac.in
+
+on:
+  workflow_dispatch:  # allows manual trigger
+  push:               # or trigger on every push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 21f3001224@ds.study.iitm.ac.in
+        run: echo "Hello from GitHub Actions!"
+
+      - name: Display current time
+        run: date
