@@ -1,4 +1,4 @@
-name: Daily Commit
+name: 21f3001224@ds.study.iitm.ac.in
 
 on:
   schedule:
@@ -13,10 +13,10 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout repository
+      - name: 21f3001224@ds.study.iitm.ac.in
         uses: actions/checkout@v4
 
-      - name: Add a commit (email:21f3001224@ds.study.iitm.ac.in)
+      - name: Add a commit (step email:21f3001224@ds.study.iitm.ac.in)
         run: |
           git config --local user.email "21f3001224@ds.study.iitm.ac.in"
           git config --local user.name "GitHub Actions Bot"
