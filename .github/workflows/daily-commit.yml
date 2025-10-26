@@ -2,9 +2,8 @@ name: Daily Commit
 
 on:
   schedule:
-    # Runs daily at 07:30 UTC
-    - cron: "30 7 * * *"
-  workflow_dispatch:  # Allow manual trigger
+    - cron: "30 7 * * *"  # daily at 07:30 UTC
+  workflow_dispatch:
 
 jobs:
   commit:
@@ -20,9 +19,8 @@ jobs:
         run: |
           git config --local user.email "21f3001224@ds.study.iitm.ac.in"
           git config --local user.name "GitHub Actions Bot"
-          # Use touch to always update the timestamp to ensure a commit
-          touch daily_update.txt
-          echo "Daily update $(date)" >> daily_update.txt
+          # Append timestamp to ensure file always changes
+          echo "Daily update $(date +%s)" >> daily_update.txt
           git add daily_update.txt
-          git commit -m "Automated daily commit [skip ci]" || exit 0
+          git commit -m "Automated daily commit [skip ci]" || echo "Nothing to commit"
           git push
