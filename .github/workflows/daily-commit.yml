@@ -1,28 +1,27 @@
-name: 21f3001224@ds.study.iitm.ac.in
+name: Daily Commit
 
 on:
   schedule:
-    # Runs daily at 07:30 UTC
-    - cron: "30 7 * * *"
-  workflow_dispatch:  # Allow manual trigger
+    - cron: "15 6 * * *" # Runs daily at 06:15 UTC
+  workflow_dispatch:
 
 jobs:
   commit:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: 21f3001224@ds.study.iitm.ac.in
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Add a commit (step email:21f3001224@ds.study.iitm.ac.in)
+      - name: Update timestamp file (21f3001224@ds.study.iitm.ac.in)
         run: |
-          git config --local user.email "21f3001224@ds.study.iitm.ac.in"
-          git config --local user.name "GitHub Actions Bot"
-          # Use touch to always update the timestamp to ensure a commit
-          touch daily_update.txt
-          echo "Daily update $(date)" >> daily_update.txt
-          git add daily_update.txt
-          git commit -m "Automated daily commit [skip ci]" || exit 0
-          git push
+          date >> daily-update-log.txt
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "21f3001224@ds.study.iitm.ac.in"
+          git add daily-update-log.txt
+          git commit -m "Automated daily update"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
