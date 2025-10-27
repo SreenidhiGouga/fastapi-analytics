@@ -1,34 +1,26 @@
-name: CI with Dependency Cache
+name: 21f3001224@ds.study.iitm.ac.in
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "30 7 * * *"  # Daily run at set time
   workflow_dispatch:
 
 jobs:
-  build:
+  automate-commit:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write  # ✅ REQUIRED for git push
     steps:
-      # 1. Checkout code
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      # 2. Cache Python dependencies
-      - name: prime-cache-f4a9540
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: cache-f4a9540
-          restore-keys: cache-f4a9540
-
-      # 3. Install dependencies
-      - name: Install dependencies
+      - name: Commit update 21f3001224@ds.study.iitm.ac.in
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          date > daily_update.txt
+          git add daily_update.txt
+          git config user.name "GitHub Actions"
+          git config user.email "21f3001224@ds.study.iitm.ac.in"
+          git commit -m "Daily automated commit on $(date +'%Y-%m-%d %H:%M:%S')" || echo "Nothing to commit"
 
-      # 4. Run tests (optional)
-      - name: Run tests
-        run: echo "CI step executed"
+      - name: Push changes 21f3001224@ds.study.iitm.ac.in
+        run: git push
