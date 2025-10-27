@@ -1,18 +1,26 @@
 name: 21f3001224@ds.study.iitm.ac.in
 
 on:
-  workflow_dispatch:  # allows manual trigger
-  push:               # or trigger on every push
+  schedule:
+    - cron: "30 7 * * *"  # Daily run at set time
+  workflow_dispatch:
 
 jobs:
-  test:
+  automate-commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # ✅ REQUIRED for git push
     steps:
-      - name: 21f3001224@ds.study.iitm.ac.in
-        run: echo "Hello from GitHub Actions!"
-        
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Display current time
-        run: date
+      - name: Commit update 21f3001224@ds.study.iitm.ac.in
+        run: |
+          date > daily_update.txt
+          git add daily_update.txt
+          git config user.name "GitHub Actions"
+          git config user.email "21f3001224@ds.study.iitm.ac.in"
+          git commit -m "Daily automated commit on $(date +'%Y-%m-%d %H:%M:%S')" || echo "Nothing to commit"
+
+      - name: Push changes 21f3001224@ds.study.iitm.ac.in
+        run: git push
